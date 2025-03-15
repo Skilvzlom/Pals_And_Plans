@@ -3,14 +3,13 @@ package org.project.pals.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.project.pals.model.enums.RolesType;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Objects;
 
 @Entity
 @Data
-@NoArgsConstructor
 public class Role implements GrantedAuthority {
 
     @Id
@@ -18,11 +17,18 @@ public class Role implements GrantedAuthority {
     private int id;
 
     @Column(nullable = false)
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private RolesType role;
+
+    public Role() {}
+
+    public Role(RolesType role) {
+        this.role = role;
+    }
 
     @Override
     public String getAuthority() {
-        return role;
+        return role.toString();
     }
 
     @Override
@@ -35,10 +41,5 @@ public class Role implements GrantedAuthority {
     @Override
     public int hashCode() {
         return Objects.hash(id, role);
-    }
-
-    @Override
-    public String toString() {
-        return role;
     }
 }
