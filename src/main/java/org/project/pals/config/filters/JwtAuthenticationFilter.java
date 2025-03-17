@@ -1,5 +1,7 @@
 package org.project.pals.config.filters;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -45,15 +47,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         if (token != null) {
-            String username = jwtUtil.extractUsername(token);
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails user = userService.loadUserByUsername(username);
+            try {
+                String username = jwtUtil.extractUsername(token);
+                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    UserDetails user = userService.loadUserByUsername(username);
 
-                if (jwtUtil.validateToken(token) && !jwtUtil.isTokenExpired(token)) {
-                    UsernamePasswordAuthenticationToken authenticationToken =
-                            new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    if (jwtUtil.validateToken(token) && !jwtUtil.isTokenExpired(token)) {
+                        UsernamePasswordAuthenticationToken authenticationToken =
+                                new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    }
                 }
+            } catch (ExpiredJwtException | MalformedJwtException e) {
+                request.setAttribute("jwt_exception", e);
             }
         }
         filterChain.doFilter(request, response);

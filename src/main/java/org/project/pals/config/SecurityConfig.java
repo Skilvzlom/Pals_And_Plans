@@ -1,6 +1,7 @@
 package org.project.pals.config;
 
 import org.project.pals.config.filters.JwtAuthenticationFilter;
+import org.project.pals.config.filters.entrypoints.JwtAuthenticationEntryPoint;
 import org.project.pals.service.UserService;
 import org.project.pals.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +26,13 @@ public class SecurityConfig {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Autowired
-    public SecurityConfig(UserService userService, PasswordEncoder passwordEncoder) {
+    public SecurityConfig(UserService userService, PasswordEncoder passwordEncoder, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
     }
 
     @Bean
@@ -47,10 +50,8 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login")
-                        .permitAll())
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .addFilterBefore(new JwtAuthenticationFilter(new JwtUtil(), userService), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
