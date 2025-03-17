@@ -8,9 +8,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.project.pals.dto.AuthRequestDto;
-import org.project.pals.model.Role;
-import org.project.pals.model.User;
-import org.project.pals.model.enums.RolesType;
+import org.project.pals.model.user.User;
+import org.project.pals.model.user.enums.RolesType;
 import org.project.pals.repository.RoleRepository;
 import org.project.pals.service.UserService;
 import org.project.pals.utils.JwtUtil;
@@ -51,15 +50,21 @@ public class AuthController {
     public ResponseEntity<String> regNewUser(
             @Parameter(description = "AuthResponseDTO",
                     required = true)
-            @RequestBody AuthRequestDto authRequest) {
+            @RequestBody AuthRequestDto authRequest)
+    {
         User user = new User(authRequest.username(), authRequest.password(), Collections.singleton(
                 roleRepository.getRoleByRole(RolesType.ROLE_USER)
         ));
         userService.addNewUser(user);
-        return ResponseEntity.ok("User registered successfully");
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/login")
+    @Operation(summary = "Авторизовать нового пользователя", description = "Принимает AuthRequestDto, возвращает token в Cookie")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Пользователь авторизован"),
+            @ApiResponse(responseCode = "400", description = "Неправильно переданы данные пользователя")
+    })
     public ResponseEntity<?> login (@RequestBody AuthRequestDto authRequestDto, HttpServletResponse response) {
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -71,10 +76,19 @@ public class AuthController {
             cookie.setPath("/");
             cookie.setMaxAge(3600*24);
             response.addCookie(cookie);
-            return ResponseEntity.ok("Logging successfully");
-
+            return ResponseEntity.ok(Collections.singletonMap("message", "logging successful"));
         } catch (BadCredentialsException e) {
-            return ResponseEntity.badRequest().body("Неправильный логин или пароль");
+            return ResponseEntity.badRequest().body(Collections.singletonMap("message", "Bad Credentials"));
         }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        Cookie cookie = new Cookie("jwt", null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
+        return ResponseEntity.ok().build();
     }
 }

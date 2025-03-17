@@ -1,7 +1,10 @@
-package org.project.pals.model;
+package org.project.pals.model.user;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -10,23 +13,28 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Getter @Setter
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(unique=true, nullable=false)
+    @Column(unique = true)
+    @NotNull
     private String username;
 
-    @Column(nullable=false)
+    @NotNull
     private String password;
+
+    private String email;
+
+    private String name;
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "user_roles",
     joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "roles_id"))
-    @Enumerated(EnumType.STRING)
     private Set<Role> roles = new HashSet<>();
 
     public User(){}
@@ -40,22 +48,6 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
     }
 
     @Override
