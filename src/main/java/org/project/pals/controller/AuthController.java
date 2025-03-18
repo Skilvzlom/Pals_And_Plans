@@ -1,17 +1,13 @@
 package org.project.pals.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import org.project.pals.dto.AuthRequestDto;
+import org.project.pals.dto.request.AuthRequestDto;
 import org.project.pals.model.user.User;
-import org.project.pals.model.user.enums.RolesType;
-import org.project.pals.repository.RoleRepository;
-import org.project.pals.service.UserService;
 import org.project.pals.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,40 +19,18 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 
+//TODO, Add logger for each end-point
 @RestController
 @RequestMapping("/auth")
-@Tag(name = "Авторизации/Регистрация", description = "Api для работы с регистрацией/авторизацией пользователей")
+@Tag(name = "API для авторизации", description = "Api для работы с авторизацией/unАвторизацией пользователей")
 public class AuthController {
 
-    private final UserService userService;
-    private final RoleRepository roleRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil = new JwtUtil();
 
     @Autowired
-    public AuthController(UserService userService, RoleRepository roleRepository, AuthenticationManager authenticationManager) {
-        this.userService = userService;
-        this.roleRepository = roleRepository;
+    public AuthController(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
-    }
-
-    @PostMapping("/register")
-    @Operation(summary = "Создать нового пользователя", description = "Принимает AuthRequestDto, возвращает http ответ")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Пользователь успешно создан"),
-            @ApiResponse(responseCode = "403", description = "У вас не прав для регистрации"),
-            @ApiResponse(responseCode = "400", description = "Неверные данные переданы (Bad Request)")
-    })
-    public ResponseEntity<String> regNewUser(
-            @Parameter(description = "AuthResponseDTO",
-                    required = true)
-            @RequestBody AuthRequestDto authRequest)
-    {
-        User user = new User(authRequest.username(), authRequest.password(), Collections.singleton(
-                roleRepository.getRoleByRole(RolesType.ROLE_USER)
-        ));
-        userService.addNewUser(user);
-        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/login")

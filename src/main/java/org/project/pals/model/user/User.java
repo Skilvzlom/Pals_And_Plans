@@ -2,7 +2,10 @@ package org.project.pals.model.user;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,11 +17,13 @@ import java.util.Set;
 
 @Entity
 @Getter @Setter
+@Builder
+@AllArgsConstructor
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(unique = true)
     @NotNull
@@ -27,6 +32,7 @@ public class User implements UserDetails {
     @NotNull
     private String password;
 
+    @Email
     private String email;
 
     private String name;
@@ -38,12 +44,6 @@ public class User implements UserDetails {
     private Set<Role> roles = new HashSet<>();
 
     public User(){}
-
-    public User(String username, String password, Set<Role> roles) {
-        this.username = username;
-        this.password = password;
-        this.roles = roles;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -1,4 +1,4 @@
-package org.project.pals.repository;
+package org.project.pals.repository.entity;
 
 import org.project.pals.model.user.Role;
 import org.project.pals.model.user.enums.RolesType;

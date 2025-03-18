@@ -1,4 +1,4 @@
-package org.project.pals.repository;
+package org.project.pals.repository.entity;
 
 import org.project.pals.model.user.User;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -12,4 +12,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @EntityGraph(attributePaths = "roles")
     Optional<User> findByUsername(String username);
+
+    void deleteUserByUsername(String username);
 }

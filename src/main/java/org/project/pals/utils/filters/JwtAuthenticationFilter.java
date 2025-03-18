@@ -1,4 +1,4 @@
-package org.project.pals.config.filters;
+package org.project.pals.utils.filters;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -59,7 +59,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     }
                 }
             } catch (ExpiredJwtException | MalformedJwtException e) {
-                request.setAttribute("jwt_exception", e);
+                //TODO, Add logging
             }
         }
         filterChain.doFilter(request, response);

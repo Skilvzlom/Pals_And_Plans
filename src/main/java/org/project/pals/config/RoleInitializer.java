@@ -2,7 +2,7 @@ package org.project.pals.config;
 
 import org.project.pals.model.user.Role;
 import org.project.pals.model.user.enums.RolesType;
-import org.project.pals.repository.RoleRepository;
+import org.project.pals.repository.entity.RoleRepository;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
