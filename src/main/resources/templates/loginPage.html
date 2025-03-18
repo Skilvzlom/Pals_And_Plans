@@ -1,34 +1,27 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Авторизация</title>
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="css/loginPage.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Inline:opsz,wght@10..72,100..900&family=Kulim+Park:ital,wght@0,200;0,300;0,400;0,600;0,700;1,200;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
 </head>
 <body>
-<label for="login">Ваш логин:</label>
-<input type="text" id="login">
-<label for="password">Ваш пароль:</label>
-<input type="password" id="password">
-<button class="sendButt" onclick="login()">Войти</button>
-
-<script>
-    async function login() {
-        const username = document.getElementById('login').value;
-        const password = document.getElementById('password').value;
-
-        const response = await fetch('/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-        });
-
-        if (response.ok) {
-            window.location.href = '/home';
-        } else {
-            alert("Error");
-        }
-    }
-</script>
+<div class="main">
+    <form class="log_form">
+        <div class="log">
+            <label for="login">Ваш логин:</label>
+            <input type="text" id="login">
+        </div>
+        <div class="pass">
+            <label for="password">Ваш пароль:</label>
+            <input type="password" id="password">
+        </div>
+        <button class="sendButt" type="submit">Войти</button>
+    </form>
+</div>
 </body>
 </html>
