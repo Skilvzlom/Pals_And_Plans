@@ -40,17 +40,18 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/login",
-                                "/error",
+                        .requestMatchers("/error",
                                 "/auth/**",
                                 "/swagger-ui/**",
-                                "/v3/api-docs").permitAll()
+                                "/v3/api-docs",
+                                "/css/**",
+                                "/js/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
                         .loginPage("/login")
-                        .defaultSuccessUrl("/home"))
+                        .permitAll())
                 .addFilterBefore(new JwtAuthenticationFilter(new JwtUtil(), userService), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

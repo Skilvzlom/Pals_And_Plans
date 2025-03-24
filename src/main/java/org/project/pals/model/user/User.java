@@ -1,6 +1,7 @@
 package org.project.pals.model.user;
 
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -19,6 +20,7 @@ import java.util.Set;
 @Getter @Setter
 @Builder
 @AllArgsConstructor
+@Schema(hidden = true)
 public class User implements UserDetails {
 
     @Id

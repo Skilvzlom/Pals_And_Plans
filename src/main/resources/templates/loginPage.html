@@ -1,17 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" type="text/css" href="css/loginPage.css">
+    <title>Login page</title>
+    <link rel="stylesheet" href="../static/css/loginPage.css" th:href="@{/css/loginPage.css}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Inline:opsz,wght@10..72,100..900&family=Kulim+Park:ital,wght@0,200;0,300;0,400;0,600;0,700;1,200;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="main">
-    <form class="log_form">
+    <form class="log_form" id="login_form">
         <div class="log">
             <label for="login">Ваш логин:</label>
             <input type="text" id="login">
@@ -23,5 +23,7 @@
         <button class="sendButt" type="submit">Войти</button>
     </form>
 </div>
+
+<script src="../static/js/login.js" th:src="@{/js/login.js}"></script>
 </body>
 </html>

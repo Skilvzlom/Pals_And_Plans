@@ -11,6 +11,7 @@ import org.project.pals.mapper.UserMapper;
 import org.project.pals.model.user.User;
 import org.project.pals.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,7 @@ public class UserController {
     @PostMapping()
     @Operation(summary = "Создать нового пользователя (Первоначальные права User)", description = "Принимает RegistrationRequestDto, возвращает http ответ")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Пользователь успешно создан"),
+            @ApiResponse(responseCode = "201", description = "Пользователь успешно создан"),
             @ApiResponse(responseCode = "403", description = "У вас не прав для регистрации"),
             @ApiResponse(responseCode = "400", description = "Неверные данные переданы (Bad Request)")
     })
@@ -47,7 +48,7 @@ public class UserController {
     {
         User user = userMapper.registrationRequestDtoToUser(requestDto);
         userService.addNewUser(user);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Operation(summary = "Получить всех пользователей", description = "Только для ролей 'Админ', 'Кодер', 'Модератор'")
